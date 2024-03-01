@@ -1,5 +1,3 @@
-package case1;
-
 public class NewConsignment {
 
     /* Field declarations */

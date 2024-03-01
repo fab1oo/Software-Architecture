@@ -1,5 +1,3 @@
-package case1;
-
 import org.camunda.bpm.client.ExternalTaskClient;
 
 public class OrderWorker {
