@@ -5,8 +5,8 @@ public class Consignment {
     private Integer weight;
     private String pickupdate;
     private String deliverydate;
-    private String customerReference;
-    private String recipientPhone;
+    private String customerRefernce;
+    private String recepientPhone;
     private String destination;
 
     /* Constructors */
@@ -14,13 +14,13 @@ public class Consignment {
     }
 
     public Consignment(String orderId, Integer weight, String pickupdate, String deliverydate,
-                       String customerReference, String recipientPhone, String destination) {
+                       String customerRefernce, String recepientPhone, String destination) {
         this.orderId = orderId;
         this.weight = weight;
         this.pickupdate = pickupdate;
         this.deliverydate = deliverydate;
-        this.customerReference = customerReference;
-        this.recipientPhone = recipientPhone;
+        this.customerRefernce = customerRefernce;
+        this.recepientPhone = recepientPhone;
         this.destination = destination;
     }
 
@@ -57,20 +57,20 @@ public class Consignment {
         this.deliverydate = deliverydate;
     }
 
-    public String getCustomerReference() {
-        return customerReference;
+    public String getCustomerRefernce() {
+        return customerRefernce;
     }
 
-    public void setCustomerReference(String customerReference) {
-        this.customerReference = customerReference;
+    public void setCustomerRefernce(String customerReference) {
+        this.customerRefernce = customerReference;
     }
 
-    public String getRecipientPhone() {
-        return recipientPhone;
+    public String getRecepientPhone() {
+        return recepientPhone;
     }
 
-    public void setRecipientPhone(String recipientPhone) {
-        this.recipientPhone = recipientPhone;
+    public void setRecepientPhone(String recipientPhone) {
+        this.recepientPhone = recipientPhone;
     }
 
     public String getDestination() {

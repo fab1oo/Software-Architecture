@@ -1,9 +1,13 @@
+import org.camunda.bpm.client.ExternalTaskClient;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ContactCarrierWorker {
 
@@ -18,39 +22,64 @@ public class ContactCarrierWorker {
     /* Driver */
     public static void main(String[] args) {
 
-        // Create REST client and target for requests
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(SERVICE_URL + POST_PATH);
 
-        // Create message for request
-        NewConsignment newConsignment = new NewConsignment();
-        newConsignment.setDestination("Baden, Rütistrasse 1"); // destination
-        newConsignment.setCustomerReference("xyz"); // purchaseId?
-        newConsignment.setRecipientPhone("+41 76 393 25 49"); // recipientPhone
-        newConsignment.setWeight(125); // weight
+        // Create connection to workflow engine
+        ExternalTaskClient processClient = ExternalTaskClient.create()
+                .baseUrl("http://" + USERNAME + ":" + PASSWORD + "@" + ENGINE_URL)
+                .asyncResponseTimeout(1000)
+                .build();
 
-        // Send POST request with newConsignment as request body
-        try {
-            Consignment response = target.request(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(newConsignment, MediaType.APPLICATION_JSON), Consignment.class);
+        // Register for the topic "group8_contactCarrier" and execute the following statements
+        processClient.subscribe(TOPIC).lockDuration(1000).handler((externalTask, externalTaskService) -> {
+            // Get variables from process instance
+            String destination = (String) externalTask.getVariable("destination");
+            String customerReference = (String) externalTask.getVariable("customerReference");
+            String recipientPhone = (String) externalTask.getVariable("recipientPhone");
+            Integer weight = (Integer) externalTask.getVariable("weight");
 
-            // print some results received from the service
-            System.out.println("Shipping Order ID: " + response.getOrderId());
-            System.out.println("Pickup Date      : " + response.getPickupdate());
-            System.out.println("Delivery Date    : " + response.getDeliverydate());
+            // Create REST client and target for requests
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client.target(SERVICE_URL + POST_PATH);
 
-            // TODO: What to do here?
+            // Create message for request
+            NewConsignment newConsignment = new NewConsignment();
+            newConsignment.setDestination(destination); // destination
+            newConsignment.setCustomerReference(customerReference); // purchaseId?
+            newConsignment.setRecipientPhone(recipientPhone); // recipientPhone
+            newConsignment.setWeight(weight); // weight
 
-        } catch (WebApplicationException e) {
-            // If HTTP status code of request is not 200
-            if (e.getResponse().getStatus() != 200) {
-                // TODO: What to do here?
-            } else {
+            // Send POST request with newConsignment as request body
+            try {
+                Consignment response = target.request(MediaType.APPLICATION_JSON)
+                        .post(Entity.entity(newConsignment, MediaType.APPLICATION_JSON), Consignment.class);
 
+                // Generate result map
+                Map<String, Object> results = new HashMap<String, Object>();
+                results.put("responseStatus", 200);
+                results.put("orderId", response.getOrderId());
+                results.put("weight", response.getWeight());
+                results.put("pickupdate", response.getPickupdate());
+                results.put("deliverydate", response.getDeliverydate());
+                results.put("customerReference", response.getCustomerRefernce());
+                results.put("recepientPhone", response.getRecepientPhone());
+                results.put("destination", response.getDestination());
+
+                externalTaskService.complete(externalTask, results);
+
+            } catch (WebApplicationException e) {
+                // If HTTP status code of request is not 200
+                if (e.getResponse().getStatus() != 200) {
+                    Map<String, Object> results = new HashMap<String, Object>();
+                    results.put("responseStatus", e.getResponse().getStatus());
+                    externalTaskService.complete(externalTask, results);
+                } else {
+
+                }
             }
-        }
+            client.close();
 
-        client.close();
+        }).open();
+
 
     }
 
