@@ -1,10 +1,12 @@
+import java.util.Date;
+
 public class Consignment {
 
     /* Field declarations */
     private String orderId;
     private Integer weight;
-    private String pickupdate;
-    private String deliverydate;
+    private Date pickupdate;
+    private Date deliverydate;
     private String customerRefernce;
     private String recepientPhone;
     private String destination;
@@ -13,7 +15,7 @@ public class Consignment {
     public Consignment() {
     }
 
-    public Consignment(String orderId, Integer weight, String pickupdate, String deliverydate,
+    public Consignment(String orderId, Integer weight, Date pickupdate, Date deliverydate,
                        String customerRefernce, String recepientPhone, String destination) {
         this.orderId = orderId;
         this.weight = weight;
@@ -41,19 +43,19 @@ public class Consignment {
         this.weight = weight;
     }
 
-    public String getPickupdate() {
+    public Date getPickupdate() {
         return pickupdate;
     }
 
-    public void setPickupdate(String pickupdate) {
+    public void setPickupdate(Date pickupdate) {
         this.pickupdate = pickupdate;
     }
 
-    public String getDeliverydate() {
+    public Date getDeliverydate() {
         return deliverydate;
     }
 
-    public void setDeliverydate(String deliverydate) {
+    public void setDeliverydate(Date deliverydate) {
         this.deliverydate = deliverydate;
     }
 
