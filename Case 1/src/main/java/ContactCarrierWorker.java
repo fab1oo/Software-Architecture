@@ -32,20 +32,26 @@ public class ContactCarrierWorker {
             // Get variables from process instance
             String destination = (String) externalTask.getVariable("destination");
             String customerReference = (String) externalTask.getVariable("customerReference");
-            String recipientPhone = (String) externalTask.getVariable("recipientPhone");
+            String recepientPhone = (String) externalTask.getVariable("recepientPhone");
             Long weightLong = externalTask.getVariable("weight");
             Integer weight = weightLong.intValue();
+            System.out.println("Test 1: " + recepientPhone);
 
             // Create REST client and target for requests
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target(SERVICE_URL + POST_PATH);
             // Create message for request
-            NewConsignment newConsignment = new NewConsignment(destination, customerReference, recipientPhone, weight);
+            NewConsignment newConsignment = new NewConsignment();
+            newConsignment.setDestination(destination);
+            newConsignment.setCustomerReference(customerReference);
+            newConsignment.setRecepientPhone(recepientPhone);
+            newConsignment.setWeight(weight);
 
             // Send POST request with newConsignment as request body
             try {
                 Consignment response = target.request(MediaType.APPLICATION_JSON)
                         .post(Entity.entity(newConsignment, MediaType.APPLICATION_JSON), Consignment.class);
+                System.out.println("Test 2: " + response.getRecepientPhone());
                 // Generate result map
                 Map<String, Object> results = new HashMap<String, Object>();
                 results.put("statusCode", 200);

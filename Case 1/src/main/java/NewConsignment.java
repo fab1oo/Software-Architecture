@@ -3,17 +3,17 @@ public class NewConsignment {
     /* Field declarations */
     private String destination;
     private String customerReference;
-    private String recipientPhone;
+    private String recepientPhone;
     private Integer weight;
 
     /* Constructors */
     public NewConsignment() {
     }
 
-    public NewConsignment(String destination, String customerReference, String recipientPhone, Integer weight) {
+    public NewConsignment(String destination, String customerReference, String recepientPhone, Integer weight) {
         this.destination = destination;
         this.customerReference = customerReference;
-        this.recipientPhone = recipientPhone;
+        this.recepientPhone = recepientPhone;
         this.weight = weight;
     }
 
@@ -34,12 +34,12 @@ public class NewConsignment {
         this.customerReference = customerReference;
     }
 
-    public String getRecipientPhone() {
-        return recipientPhone;
+    public String getRecepientPhone() {
+        return recepientPhone;
     }
 
-    public void setRecipientPhone(String recipientPhone) {
-        this.recipientPhone = recipientPhone;
+    public void setRecepientPhone(String recepientPhone) {
+        this.recepientPhone = recepientPhone;
     }
 
     public Integer getWeight() {
