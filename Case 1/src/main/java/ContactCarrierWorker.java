@@ -35,7 +35,6 @@ public class ContactCarrierWorker {
             String recepientPhone = (String) externalTask.getVariable("recepientPhone");
             Long weightLong = externalTask.getVariable("weight");
             Integer weight = weightLong.intValue();
-            System.out.println("Test 1: " + recepientPhone);
 
             // Create REST client and target for requests
             Client client = ClientBuilder.newClient();
@@ -51,7 +50,6 @@ public class ContactCarrierWorker {
             try {
                 Consignment response = target.request(MediaType.APPLICATION_JSON)
                         .post(Entity.entity(newConsignment, MediaType.APPLICATION_JSON), Consignment.class);
-                System.out.println("Test 2: " + response.getRecepientPhone());
                 // Generate result map
                 Map<String, Object> results = new HashMap<String, Object>();
                 results.put("statusCode", 200);
@@ -62,12 +60,12 @@ public class ContactCarrierWorker {
                 results.put("customerReference", response.getCustomerRefernce());
                 results.put("recepientPhone", response.getRecepientPhone());
                 results.put("destination", response.getDestination());
-
+                System.out.println("Response carrier: " + results);
                 externalTaskService.complete(externalTask, results);
-
             } catch (WebApplicationException e) {
                 // If HTTP status code of request is not 200
                 if (e.getResponse().getStatus() != 200) {
+                    System.out.println("Service request failed!");
                     Map<String, Object> results = new HashMap<String, Object>();
                     results.put("statusCode", e.getResponse().getStatus());
                     externalTaskService.complete(externalTask, results);
