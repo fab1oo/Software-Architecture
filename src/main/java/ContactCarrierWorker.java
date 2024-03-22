@@ -17,7 +17,7 @@ public class ContactCarrierWorker {
     final static String ENGINE_URL = "192.168.111.3:8080/engine-rest";
     final static String USERNAME = "group8";
     final static String PASSWORD = "w3poi3q44qqw4vt";
-    final static String TOPIC = "group8_contactCarrier";
+    final static String TOPIC = "group8_meinExternerTask";
 
     /* Driver */
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class ContactCarrierWorker {
                 .asyncResponseTimeout(1000)
                 .build();
 
-        // Register for the topic "group8_contactCarrier" and execute the following statements
+        // Register for the topic "group8_meinExternerTask" and execute the following statements
         processClient.subscribe(TOPIC).lockDuration(1000).handler((externalTask, externalTaskService) -> {
             // Get variables from process instance
             String destination = (String) externalTask.getVariable("destination");
